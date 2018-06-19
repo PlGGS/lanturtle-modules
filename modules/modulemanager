@@ -14,7 +14,7 @@ CONF=/tmp/modulemanager.form
 function delete_modules {
     modlist=""
     n=1
-    ls -1 /etc/turtle/modules/ > /tmp/installed_mods
+    ls -1 /sd/turtle/modules/ > /tmp/installed_mods
     while read mod;
     do
             modlist="$modlist $mod $n off"
@@ -31,7 +31,7 @@ function delete_modules {
             0) 
             for choice in $choices
             do
-                rm /etc/turtle/modules/$choice
+                rm /sd/turtle/modules/$choice
             done
             dialog --title "Notice" --msgbox "Modules deleted." 5 60
             configure
@@ -50,11 +50,11 @@ function update_modules {
     response=$?
     case $response in
         0)
-            for module in /etc/turtle/modules/*
+            for module in /sd/turtle/modules/*
             do
                 module=$(echo $module | awk -F '/' '{print $5}')
-                wget -q $BASE_URL/$module -O /etc/turtle/modules/$module
-                chmod +x /etc/turtle/modules/$module
+                wget -q $BASE_URL/$module -O /sd/turtle/modules/$module
+                chmod +x /sd/turtle/modules/$module
             done
             dialog --title "Notice" --msgbox "Modules updated" 5 60
             configure
@@ -79,7 +79,7 @@ case $response in
         pkg_name=$(echo $pkg | awk '{print $1}')
         pkg_desc="$(echo $pkg | sed 's/^[^ ][^ ]* //')"
 
-        if [ ! -f /etc/turtle/modules/$pkg_name  ]
+        if [ ! -f /sd/turtle/modules/$pkg_name  ]
             then
             pkglist="$pkglist $pkg_name '"$pkg_desc"' off"
         fi
@@ -97,8 +97,8 @@ case $response in
         for module in $install_modules
         do
             module=$(echo $module | awk '{print $1}')
-            wget -qO- $BASE_URL/$module > /etc/turtle/modules/$module
-            chmod +x /etc/turtle/modules/$module
+            wget -qO- $BASE_URL/$module > /sd/turtle/modules/$module
+            chmod +x /sd/turtle/modules/$module
             echo $module >> /tmp/installed_modules
         done
         message=$(cat /tmp/installed_modules)

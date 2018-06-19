@@ -71,14 +71,6 @@ if [[ ! $(opkg list-installed | grep coreutils-sleep) ]];
     opkg install coreutils-sleep | dialog --progressbox "Installing dependency coreutils-sleep" 14 72
 fi
 
-if [[ ! -d /sd/turtle/Responder || ! -s /sd/turtle/Responder/Responder.py ]];
-  then
-	wget -q -O /tmp/responder.zip --no-check-certificate https://github.com/lgandx/responder/archive/master.zip | dialog --progressbox "Installing dependency responder" 14 72
-	unzip -x /tmp/responder.zip -d /etc/turtle/ -x *.exe | dialog --progressbox "Unpacking dependency responder" 14 72
-	mv /etc/turtle/Responder-master/ /etc/turtle/Responder | dialog --progressbox "Finishing dependency responder" 14 72
-	rm /tmp/responder.zip
-fi
-
 # Setup loot directory and complete setup
 mkdir /root/loot
 touch /root/loot/responder.log
