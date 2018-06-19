@@ -52,7 +52,7 @@ function disable_iptables {
 }
 
 function start {
-  if [ -s /etc/config/responder ]; 
+  if [ -s /sd/config/responder ]; 
   then
     responder_interface=$(uci get responder.interface)
     responder_log=$(uci get responder.log)
@@ -97,12 +97,12 @@ function start {
       opkg update > /dev/null && opkg install python-openssl
     fi
     
-    if [[ ! -d /etc/turtle/Responder || ! -s /etc/turtle/Responder/Responder.py || ! -s /etc/turtle/Responder/Responder.conf ]];
+    if [[ ! -d /sd/turtle/Responder || ! -s /sd/turtle/Responder/Responder.py || ! -s /sd/turtle/Responder/Responder.conf ]];
     then
       echo "Required Responder files not found. Downloading..."
       check_internet
-      rm -rf /etc/turtle/Responder
-      git clone git://github.com/lgandx/Responder /etc/turtle/Responder -q
+      rm -rf /sd/turtle/Responder
+      git clone git://github.com/lgandx/Responder /sd/turtle/Responder -q
     fi
     
     case $responder_mode in
@@ -118,7 +118,7 @@ function start {
       *)
         echo "Responder configuration not valid."
         echo "Please re-configure then try again."
-        rm -f /etc/config/responder
+        rm -f /sd/config/responder
         exit 1
         ;;
     esac
@@ -132,19 +132,19 @@ function start {
             enable_iptables
           fi
           
-          if [ -s /etc/turtle/Responder/Responder.db ]; 
+          if [ -s /sd/turtle/Responder/Responder.db ]; 
           then
-            rm -f /etc/turtle/Responder/Responder.db
+            rm -f /sd/turtle/Responder/Responder.db
           fi
           
-          if [[ $(readlink /etc/turtle/Responder/logs) != "/sshfs/Responder/logs" || ! -d /sshfs/Responder/logs ]]; 
+          if [[ $(readlink /sd/turtle/Responder/logs) != "/sshfs/Responder/logs" || ! -d /sshfs/Responder/logs ]]; 
           then
-            rm -rf /etc/turtle/Responder/logs
+            rm -rf /sd/turtle/Responder/logs
             mkdir -p /sshfs/Responder/logs
-            ln -s /sshfs/Responder/logs /etc/turtle/Responder/logs
+            ln -s /sshfs/Responder/logs /sd/turtle/Responder/logs
           fi
           
-          echo "python /etc/turtle/Responder/Responder.py $mode -I $responder_interface" | at now
+          echo "python /sd/turtle/Responder/Responder.py $mode -I $responder_interface" | at now
           echo -e "Responder started in mode $responder_mode against interface $responder_interface\nand logs are being saved to /sshfs/Responder"
           echo "Logs can be viewed at Configure > log > View log"
         else 
@@ -158,18 +158,18 @@ function start {
           enable_iptables
         fi
         
-        if [ -s /etc/turtle/Responder/Responder.db ]; 
+        if [ -s /sd/turtle/Responder/Responder.db ]; 
         then
-          rm -f /etc/turtle/Responder/Responder.db
+          rm -f /sd/turtle/Responder/Responder.db
         fi
         
-        if [[ $(readlink /etc/turtle/Responder/logs) != "/tmp/Responder/logs" || ! -d /tmp/Responder/logs ]]; then
-          rm -rf /etc/turtle/Responder/logs
+        if [[ $(readlink /sd/turtle/Responder/logs) != "/tmp/Responder/logs" || ! -d /tmp/Responder/logs ]]; then
+          rm -rf /sd/turtle/Responder/logs
           mkdir -p /tmp/Responder/logs
-          ln -s /tmp/Responder/logs /etc/turtle/Responder/logs
+          ln -s /tmp/Responder/logs /sd/turtle/Responder/logs
         fi
         
-        echo "python /etc/turtle/Responder/Responder.py $mode -I $responder_interface &" | at now
+        echo "python /sd/turtle/Responder/Responder.py $mode -I $responder_interface &" | at now
         echo -e "Responder started in mode $responder_mode against interface $responder_interface\nand logs are being saved to /tmp/Responder"
         echo "Responder started with pid"
         pgrep -f Responder.py
@@ -177,7 +177,7 @@ function start {
       *)
         echo "Responder configuration not valid."
         echo "Please re-configure then try again."
-        rm -f /etc/config/responder
+        rm -f /sd/config/responder
         exit 1
         ;;
     esac
@@ -198,7 +198,7 @@ function stop {
 }
 
 function status {
-  if ps | grep -w -q [/]etc/turtle/Responder/Responder.py; then echo "1"; else echo "0"; fi
+  if ps | grep -w -q [/]sd/turtle/Responder/Responder.py; then echo "1"; else echo "0"; fi
 }
 
 function check_internet {
@@ -363,14 +363,14 @@ mode
 function responderconf {
 dialog \
     --help-button \
-    --title "Editing: /etc/turtle/Responder/Responder.conf" \
-    --editbox /etc/turtle/Responder/Responder.conf 18 72\
+    --title "Editing: /sd/turtle/Responder/Responder.conf" \
+    --editbox /sd/turtle/Responder/Responder.conf 18 72\
   2>$CONF
   return=$?
   case $return in
     $DIALOG_OK)
       cat $CONF | {
-        cat $CONF > /etc/turtle/Responder/Responder.conf
+        cat $CONF > /sd/turtle/Responder/Responder.conf
         rm $CONF
         configure
       };;
@@ -388,9 +388,9 @@ dialog \
 }
 
 function configure {
-if [[ ! -s /etc/config/responder ]];
+if [[ ! -s /sd/config/responder ]];
 then
-  touch /etc/config/responder
+  touch /sd/config/responder
 fi
 
   dialog --title "" --menu "" 15 60 5 \
