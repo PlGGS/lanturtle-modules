@@ -75,13 +75,6 @@ function start {
       echo "Responder mode not configured."
       exit 1
     fi
-  
-    if [[ ! $(opkg list-installed | grep git) ]];
-    then
-      echo "Dependency git not installed. Installing..."
-      check_internet
-      opkg update > /dev/null && opkg install git
-    fi
     
     if [[ ! $(opkg list-installed | grep python-sqlite3) ]];
     then
@@ -95,14 +88,6 @@ function start {
       echo "Dependency python-openssl not installed. Installing..."
       check_internet
       opkg update > /dev/null && opkg install python-openssl
-    fi
-    
-    if [[ ! -d /sd/turtle/Responder || ! -s /sd/turtle/Responder/Responder.py || ! -s /sd/turtle/Responder/Responder.conf ]];
-    then
-      echo "Required Responder files not found. Downloading..."
-      check_internet
-      rm -rf /sd/turtle/Responder
-      git clone git://github.com/lgandx/Responder /sd/turtle/Responder -q
     fi
     
     case $responder_mode in
