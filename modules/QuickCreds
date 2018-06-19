@@ -48,14 +48,6 @@ The LAN Turtle is currently offline.\nPlease connect the LAN Turtle to the Inter
     exit 1
 }
 
-# Install dependencies
-opkg update | dialog --progressbox "Updating opkg" 14 72 
-
-if [[ ! $(opkg list-installed | grep git) ]];
-  then
-    opkg install git | dialog --progressbox "Installing dependency git" 14 72
-fi
-
 if [[ ! $(opkg list-installed | grep python-sqlite3) ]];
   then
     opkg install python-sqlite3 | dialog --progressbox "Installing dependency python-sqlite3" 14 72
@@ -78,9 +70,10 @@ fi
 
 if [[ ! -d /etc/turtle/Responder || ! -s /etc/turtle/Responder/Responder.py ]];
 then
-  rm -rf /etc/turtle/Responder
-  git clone git://github.com/lgandx/responder /etc/turtle/Responder -q | dialog --progressbox "Installing dependency responder" 14 72
-  rm -rf /etc/turtle/Responder/.git
+  wget -q -O /tmp/responder.zip --no-check-certificate https://github.com/lgandx/responder/archive/master.zip | dialog --progressbox "Installing dependency responder" 14 72
+  unzip -x /tmp/responder.zip -d /etc/turtle/ -x *.exe | dialog --progressbox "Unpacking dependency responder" 14 72
+  mv /etc/turtle/Responder-master/ /etc/turtle/Responder | dialog --progressbox "Finishing dependency responder" 14 72
+  rm /tmp/responder.zip
 fi
 
 # Setup loot directory and complete setup
