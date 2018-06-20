@@ -1,5 +1,5 @@
 #!/bin/bash /usr/lib/turtle/turtle_module
-VERSION="1.0"
+VERSION="1.1"
 DESCRIPTION="Module Manager"
 EXECUTABLE="0"
 CONF=/tmp/modulemanager.form
@@ -45,8 +45,8 @@ function delete_modules {
 }
 
 function update_modules {
-    BASE_URL='http://lanturtle.com/modules'
-    dialog --yesno "Are you sure you want to connect to LANTurtle.com and update all installed modules?" 6 60
+    BASE_URL='https://github.com/PlGGS/lanturtle-modules'
+    dialog --yesno "Are you sure you want to connect to bblake.info and update all installed modules?" 6 60
     response=$?
     case $response in
         0)
@@ -66,11 +66,11 @@ function update_modules {
 
 
 function module_directory {
-dialog --yesno "Are you sure you want to connect to LANTurtle.com?" 6 60
+dialog --yesno "Are you sure you want to connect to bblake.info?" 6 60
 response=$?
 case $response in
     0) 
-    BASE_URL='http://lanturtle.com/modules'
+    BASE_URL='https://github.com/PlGGS/lanturtle-modules'
     wget -q $BASE_URL/module_list -O /tmp/module_list
 
     pkglist=""
@@ -116,7 +116,7 @@ esac
 
 function configure {
 dialog --title "Module Manager" --menu "" 15 60 4 \
-    "Directory" "Download modules from LANTurtle.com" \
+    "Directory" "Download modules from bblake.info" \
     "Delete"    "Delete installed modules" \
     "Update"    "Update installed modules" \
     "Back"      "Return to Previous Menu" 2> /tmp/directory.out
